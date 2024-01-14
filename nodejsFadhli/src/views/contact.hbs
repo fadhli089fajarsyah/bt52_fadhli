@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body style="background-color: rgb(236, 233, 233);">
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary position-fixed px-4">
+        <div class="container-fluid">
+            <img src="/assets/img/dw.png" alt="" srcset="" class="logo_nav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add_my_project">My Project</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/oop">oop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api">rating</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-lg-none" href="/contact">Contact Me </a>
+                    </li>
+                </ul>
+            </div>
+            <a href="/contact" type="button" class="btn btn-dark d-none d-lg-block">contact Me</a>
+        </div>
+    </nav>
+    <div class="container_contact flex">
+        <div class="warp_content_contact">
+            <h1 class="title">GET IN TOUCH</h1>
+            <div class="container mt-5">
+                <form action="" class="form_wrap text-start" onsubmit="return false;">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input class="form-control" type="text" id="name" name="name" placeholder="Enter your name" required>
+                    </div>
+            
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input class="form-control" type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+            
+                    <!-- Phone Number -->
+                    <div class="form-group">
+                        <label for="phone_number">Phone Number</label>
+                        <input class="form-control" type="tel" id="phone_number" name="phone_number" placeholder="Enter your phone number" required>
+                    </div>
+            
+                    <!-- Subject -->
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input class="form-control" type="text" id="subject" name="subject" placeholder="Enter the subject" required>
+                    </div>
+            
+                    <!-- Your Message -->
+                    <div class="form-group">
+                        <label for="your_message">Your Message</label>
+                        <textarea class="form-control" id="your_message" name="your_message" rows="5" placeholder="Enter your message" required></textarea>
+                    </div>
+            
+                    <!-- Submit Button -->
+                    <div class="form-group mt-4">
+                        <input type="submit" onclick="abc(event)" value="Submit" class="btn btn-dark">
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+    <script src="/assets/js/contact.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

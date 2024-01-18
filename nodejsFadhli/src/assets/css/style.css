@@ -20,6 +20,9 @@ body {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.logo{
+    margin-right: 10px;
+}
 
 .btn_contact {
     background-color: black;
@@ -159,6 +162,7 @@ body {
 }
 
 .link_icn_card {
+    overflow: hidden;
     text-decoration: none;
 }
 
@@ -544,10 +548,10 @@ body {
 }
 
 .description_card_project {
+    height: 100px;
+    overflow: hidden;
     width: 100%;
-    /* Anda bisa menyesuaikan lebar sesuai kebutuhan */
     word-wrap: break-word;
-    /* Memastikan pematahan kata jika konten melebihi lebar */
 }
 
 
@@ -671,6 +675,7 @@ body {
     }
 
     .icn_and_card {
+        overflow: hidden;
         width: 100%;
         justify-content: center;
         align-items: center;

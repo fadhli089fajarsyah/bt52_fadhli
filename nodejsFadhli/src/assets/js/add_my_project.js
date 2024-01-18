@@ -12,7 +12,7 @@ function hitungHari(starDate, endDate) {
     let totalHari = Math.abs(Math.floor(selisih / (1000 * 60 * 60 * 24)) % 30);
     
     return totalHari;
-}
+}   
 
 
 function hitungBulan(starDate, endDate) {
@@ -62,7 +62,7 @@ function addProject(event) {
 
     for (let i = 0; i < checkedTechnologies.length; i++) {
         techValues.push(checkedTechnologies[i].value);
-    }
+    }   
 
 
     // Buat objek untuk menampung data
@@ -140,7 +140,7 @@ function renderProject() {
                     <p>${project.description}</p> 
                 </div>
                 <div class="flex warp_icn_card_project">
-                    ${logo}
+                    
                 </div>
                 <div class="flex warp_btn_edit_delete">
                     <a href="" class="btn_contact btn_edit_delete flex">edit</a>

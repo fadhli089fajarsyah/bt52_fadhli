@@ -107,7 +107,7 @@
         <div class="container mt-5">
             <div class="form-group d-flex flex-column justify-content-center align-items-center">
                 <h1>ADD MY PROJECT</h1>
-                <form action="" class="form_add" onsubmit="addProject(event)">
+                <form action="/createBlog" class="form_add" method="POST">
                     <!-- Project Name -->
                     <div class="form-group">
                         <label for="project_name">Project Name</label>
@@ -138,35 +138,35 @@
                     <div class="form-group">
                         <label for="technologies">Technologies</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="node_js" name="technologies[]"
-                                value="node_js">
-                            <label class="form-check-label" for="node_js">Node.js</label>
+                            <input class="form-check-input" type="checkbox" id="logoNode" name="checkedTechnologies"
+                                value="logoNode.png">
+                            <label class="form-check-label" for="logoNode">Node.js</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="laravel" name="technologies[]"
-                                value="laravel">
+                            <input class="form-check-input" type="checkbox" id="laravel" name="checkedTechnologies"
+                                value="laravel.png">
                             <label class="form-check-label" for="laravel">Laravel</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="react_js" name="technologies[]"
-                                value="react_js">
+                            <input class="form-check-input" type="checkbox" id="react_js" name="checkedTechnologies"
+                                value="react.png">
                             <label class="form-check-label" for="react_js">React.js</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="java" name="technologies[]"
-                                value="java">
+                            <input class="form-check-input" type="checkbox" id="java" name="checkedTechnologies"
+                                value="java.png">
                             <label class="form-check-label" for="java">Java</label>
                         </div>
                     </div>
 
-                    <!-- Upload Image -->
+
                     <div>
                         <label for="upload_image" class="form-label">Upload Image</label>
                         <input class="form-control form-control-lg" id="upload_image" type="file" name="upload_image">
                     </div>
                     <!-- Submit Button -->
                     <div class="form-group mt-4 d-flex justify-content-end align-items-end">
-                        <input type="submit" value="Submit" class="btn btn-dark">
+                        <input type="submit" value="Submit" class="btn btn-dark" >
                     </div>
                 </form>
             </div>
@@ -176,21 +176,23 @@
         <div class="my_project">
             <h1 class="title_center flex">MY PROJECT</h1>
                 <div class="warp_my_project flex" id="warp_my_project">
-                {{#each projectName}}
-                    <a href="/detail/{{this.id}}" class="link_to_detail_page">
+                {{#each myProject}}
+                    <a href="/detail/{{@index}}" class="link_to_detail_page">
                         <div class="card_my_project">
-                            <img src="{{this.img}}" alt="" class="img_project flex">
-                            <a href="/detail/{{this.id}}" class="link lk_project">{{this.id}}</a>
-                            <p class="tekx_card_project">3 bulan</p>
+                            <img src="/assets/img/dw.png" alt="" class="img_project flex">
+                            <a href="/detail/{{@index}}" class="link lk_project">{{this.project_name}}</a>
+                            <p class="tekx_card_project">{{this.duration.tahun}} tahun {{this.duration.resetbulan}} bulan {{this.duration.resethari}} hari</p>
                             <div class="description_card_project">
-                                <p>{{this.title}}</p>
+                                <p>{{this.description}}</p>
                             </div>
                             <div class="flex warp_icn_card_project">
-                                {{this.logo}}
+                                {{#each logos}}
+                                <img src="/assets/img/{{this}}" alt="" class="logo" width="25px" height="30px" >
+                                {{/each}}
                             </div>
                             <div class="flex warp_btn_edit_delete">
-                                <a href="" class="btn_contact btn_edit_delete flex">edit</a>
-                                <a href="" class="btn_contact btn_edit_delete flex">delete</a>
+                                <a href="/edit/{{@index}}" class="btn_contact btn_edit_delete flex">edit</a>
+                                <a href="/delete/{{@index}}" class="btn_contact btn_edit_delete flex">delete</a>
                             </div>
                         </div>
                     </a>

@@ -16,6 +16,7 @@ function getDataApi() {
 }
 
 
+
 //panggil funtion mengambil apinya
 getDataApi()
     .then(data => {

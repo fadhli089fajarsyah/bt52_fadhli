@@ -3,6 +3,13 @@ const exphbs = require('express-handlebars') // untuk membuat instance dari Expr
 const app = express()
 const port = 3000
 
+//koneksi ke file file config buat ke database
+const { development } = require('./src/config/config.json')
+const { Sequelize, QueryTypes } = require('sequelize')
+const SequelizePool = new Sequelize(development)
+let models = require("./src/models");
+let myprojects = models.myprojects
+
 
 app.set('view engine', 'hbs')
 app.set('views', 'src/views')
@@ -24,6 +31,7 @@ app.post('/penangananEdit/:id', penangananEdit)
 app.post('/createBlog', penagananCreateBlog)
 
 const myProject = []
+
 
 // durasi
 function calculateDuration(star_date, end_date) {
@@ -48,63 +56,148 @@ function calculateDuration(star_date, end_date) {
     };
 }
 
-//pengecek logo yang di pilih
-
-
-
-function penangananEdit(req, res) {
-    const { id } = req.params;
-    const { project_name, description, star_date, end_date, checkedTechnologies } = req.body;
-
-    const indexint = parseInt(id); //ubah dulu dari string ke int karna splice pertamanya harus int tidk boleh string
-    const duration = calculateDuration(star_date, end_date);
-    const logos = checkedTechnologies
-
-    myProject.splice(indexint, 1, {
-        project_name,
-        description,
-        logos: Array.isArray(logos) ? logos : [logos],
-        star_date,
-        end_date,
-        duration
-    });
-    const abc = myProject
-
-
-    res.redirect('/add_my_project');
-}
-
-
-function edit(req, res) {
-    const { id } = req.params;
-    const dataEdit = myProject[id]
-    console.log(dataEdit)
-
-
-
-
-
-    res.render('edit', { dataEdit, index: id,  })
-
+//ambil data dari database buat edit
+async function getSingleDataFromDatabase(id) {
+    try {
+        const project = await SequelizePool.query(
+            "SELECT * FROM myprojects WHERE id = :id",
+            {
+                replacements: { id },
+                type: Sequelize.QueryTypes.SELECT,
+            }
+        );
+        return project[0]; // Mengambil data pertama dari hasil query
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 }
 
 
 
 
+async function penangananEdit(req, res) {
+    try {
+        const { id } = req.params;
+        const { project_name, description, star_date, end_date, checkedTechnologies } = req.body;
+        const duration = calculateDuration(star_date, end_date);
+        const logos = checkedTechnologies;
+    
+        await SequelizePool.query(
+            `
+            UPDATE myprojects SET 
+            projectname = :project_name,
+            description = :description,
+            star_date = :star_date,
+            end_date = :end_date,
+            resethari = :resethari,
+            resetbulan = :resetbulan,
+            tahun = :tahun,
+            logos = ARRAY[:logos]
+            WHERE id = :id
+            `,
+            {
+                replacements: {
+                    id,
+                    project_name,
+                    description,
+                    star_date,
+                    end_date,
+                    resethari: duration.resethari,
+                    resetbulan: duration.resetbulan,
+                    tahun: duration.tahun,
+                    logos,
+                },
+                type: Sequelize.QueryTypes.UPDATE,
+            }
+        );
+    
+        res.redirect('/add_my_project');
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Gagal mengupdate data",
+            error: error.message,
+        });
+    }
 
-function penangananDelete(req, res) {
-    const { id } = req.params
-    myProject.splice(id, 1)
+    // const { id } = req.params;
+    // const { project_name, description, star_date, end_date, checkedTechnologies } = req.body;
 
-    res.redirect('/add_my_project')
+    // const indexint = parseInt(id); //ubah dulu dari string ke int karna splice pertamanya harus int tidk boleh string
+    // const duration = calculateDuration(star_date, end_date);
+    // const logos = checkedTechnologies
+
+    // myProject.splice(indexint, 1, {
+    //     project_name,
+    //     description,
+    //     logos: Array.isArray(logos) ? logos : [logos],
+    //     star_date,
+    //     end_date,
+    //     duration
+    // });
+    // const abc = myProject
+
+
+    // res.redirect('/add_my_project');
+}
+
+
+async function edit(req, res) {
+    try {
+        const { id } = req.params;
+        const dataEdit = await getSingleDataFromDatabase(id);
+        console.log(dataEdit);
+
+        res.render('edit', { dataEdit, index: id, });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+
+    // const { id } = req.params;
+    // const dataEdit = myProject[id]
+    // console.log(dataEdit)
+
+    // res.render('edit', { dataEdit, index: id,  })
+
 }
 
 
 
 
 
-function add_my_project(req, res) {
-    res.render('add_my_project', { myProject })
+async function penangananDelete(req, res) {
+    try {
+        const { id } = req.params
+        await SequelizePool.query(`DELETE FROM myprojects WHERE id = ${id}`)
+
+        res.redirect('/add_my_project')
+    } catch (error) {
+        throw error
+    }
+    // const { id } = req.params
+    // myProject.splice(id, 1)
+
+    // res.redirect('/add_my_project')
+}
+
+
+
+
+
+async function add_my_project(req, res) {
+    try {
+        const projects = await SequelizePool.query("SELECT * FROM myprojects", {
+            type: Sequelize.QueryTypes.SELECT
+        });
+
+        res.render('add_my_project', { projects });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+    // res.render('add_my_project', { myProject })
 }
 function detail(req, res) {
     const { id } = req.params
@@ -138,25 +231,54 @@ function home(req, res) {
 
 
 
-function penagananCreateBlog(req, res) {
-    const { project_name, description, checkedTechnologies, star_date, end_date, } = req.body
+async function penagananCreateBlog(req, res) {
+    try {
+        const { project_name, description, star_date, end_date, checkedTechnologies } = req.body;
+        const duration = calculateDuration(star_date, end_date);
+        const logos = checkedTechnologies
+        console.log(logos);
+        const query = `
+    INSERT INTO myprojects(projectname, description, star_date, end_date, resethari, resetbulan, tahun, logos, "createdAt", "updatedAt") 
+    VALUES (:project_name, :description, :star_date, :end_date, :resethari, :resetbulan, :tahun, ARRAY[:logos], NOW(), NOW())
+`;
 
-    const logos = checkedTechnologies
+        await myprojects.sequelize.query(query, {
+            replacements: {
+                project_name,
+                description,
+                star_date,
+                end_date,
+                resethari: duration.resethari,
+                resetbulan: duration.resetbulan,
+                tahun: duration.tahun,
+                logos,
+            },
+            type: Sequelize.QueryTypes.INSERT,
+        });
 
-    const duration = calculateDuration(star_date, end_date);
+        res.redirect('/add_my_project');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+    // const { project_name, description, checkedTechnologies, star_date, end_date, } = req.body
+
+    // const logos = checkedTechnologies
+
+    // const duration = calculateDuration(star_date, end_date);
 
 
-    myProject.push({
-        project_name,
-        description,
-        logos: Array.isArray(logos) ? logos : [logos],// jadi method ini kurang lebihb kayak apabila ni logos ini "laravel" maka di buat menjadi ["laravel" inti nya biar menjadi array
-        duration,
-        star_date,
-        end_date
-    });
+    // myProject.push({
+    //     project_name,
+    //     description,
+    //     logos: Array.isArray(logos) ? logos : [logos],// jadi method ini kurang lebihb kayak apabila ni logos ini "laravel" maka di buat menjadi ["laravel" inti nya biar menjadi array
+    //     duration,
+    //     star_date,
+    //     end_date
+    // });
 
 
-    res.redirect('/add_my_project');
+    // res.redirect('/add_my_project');
 }
 
 app.listen(port, () => {

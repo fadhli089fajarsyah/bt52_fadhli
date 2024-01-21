@@ -111,7 +111,7 @@
                     <!-- Project Name -->
                     <div class="form-group">
                         <label for="project_name">Project Name</label>
-                        <input class="form-control" type="text" id="project_name" name="project_name"
+                        <input required class="form-control" type="text" id="project_name" name="project_name"
                             placeholder="Enter project name">
                     </div>
 
@@ -119,11 +119,11 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label for="star_date">Start Date</label>
-                            <input class="form-control" type="date" id="star_date" name="star_date">
+                            <input required class="form-control" type="date" id="star_date" name="star_date">
                         </div>
                         <div class="col-md-6">
                             <label for="end_date">End Date</label>
-                            <input class="form-control" type="date" id="end_date" name="end_date">
+                            <input required class="form-control" type="date" id="end_date" name="end_date">
                         </div>
                     </div>
 
@@ -138,22 +138,22 @@
                     <div class="form-group">
                         <label for="technologies">Technologies</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="logoNode" name="checkedTechnologies"
+                            <input required class="form-check-input" type="checkbox" id="logoNode" name="checkedTechnologies"
                                 value="logoNode.png">
                             <label class="form-check-label" for="logoNode">Node.js</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="laravel" name="checkedTechnologies"
+                            <input required class="form-check-input" type="checkbox" id="laravel" name="checkedTechnologies"
                                 value="laravel.png">
                             <label class="form-check-label" for="laravel">Laravel</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="react_js" name="checkedTechnologies"
+                            <input required class="form-check-input" type="checkbox" id="react_js" name="checkedTechnologies"
                                 value="react.png">
                             <label class="form-check-label" for="react_js">React.js</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="java" name="checkedTechnologies"
+                            <input required class="form-check-input" type="checkbox" id="java" name="checkedTechnologies"
                                 value="java.png">
                             <label class="form-check-label" for="java">Java</label>
                         </div>
@@ -176,12 +176,12 @@
         <div class="my_project">
             <h1 class="title_center flex">MY PROJECT</h1>
                 <div class="warp_my_project flex" id="warp_my_project">
-                {{#each myProject}}
-                    <a href="/detail/{{@index}}" class="link_to_detail_page">
+                {{#each projects}}
+                    <a href="/detail/{{this.id}}" class="link_to_detail_page">
                         <div class="card_my_project">
                             <img src="/assets/img/dw.png" alt="" class="img_project flex">
-                            <a href="/detail/{{@index}}" class="link lk_project">{{this.project_name}}</a>
-                            <p class="tekx_card_project">{{this.duration.tahun}} tahun {{this.duration.resetbulan}} bulan {{this.duration.resethari}} hari</p>
+                            <a href="/detail/{{this.id}}" class="link lk_project">{{this.projectname}}</a>
+                            <p class="tekx_card_project">{{this.tahun}} tahun {{this.resetbulan}} bulan {{this.resethari}} hari</p>
                             <div class="description_card_project">
                                 <p>{{this.description}}</p>
                             </div>
@@ -191,8 +191,8 @@
                                 {{/each}}
                             </div>
                             <div class="flex warp_btn_edit_delete">
-                                <a href="/edit/{{@index}}" class="btn_contact btn_edit_delete flex">edit</a>
-                                <a href="/delete/{{@index}}" class="btn_contact btn_edit_delete flex">delete</a>
+                                <a href="/edit/{{this.id}}" class="btn_contact btn_edit_delete flex">edit</a>
+                                <a href="/delete/{{this.id}}" class="btn_contact btn_edit_delete flex">delete</a>
                             </div>
                         </div>
                     </a>

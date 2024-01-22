@@ -2,6 +2,9 @@ const express = require('express')
 const exphbs = require('express-handlebars') // untuk membuat instance dari Express Handlebars (exphbs) dengan konfigurasi tertentu. exphbs.create adalah metode yang disediakan oleh modul Express Handlebars 
 const app = express()
 const port = 3000
+const session = require('express-session')
+const flash = require('express-flash')
+const bcrypt = require('bcrypt')
 
 //koneksi ke file file config buat ke database
 const { development } = require('./src/config/config.json')
@@ -11,6 +14,21 @@ let models = require("./src/models");
 let myprojects = models.myprojects
 
 
+// middleware sessionnya
+app.use(session({
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        maxAge: 2 * 60 * 60 * 1000
+    },
+    resave: false,
+    store: session.MemoryStore(),
+    secret: 'session_storage',
+    saveUninitialized: true
+}))
+
+//flash midelwarenya
+app.use(flash())
 app.set('view engine', 'hbs')
 app.set('views', 'src/views')
 
@@ -26,9 +44,14 @@ app.get('/hof', hof)
 app.get('/oop', oop)
 app.get('/edit/:id', edit)
 app.get('/delete/:id', penangananDelete)
+app.get('/register', register)
+app.get('/login', login)
+app.get('/logout', logout);
 
 app.post('/penangananEdit/:id', penangananEdit)
 app.post('/createBlog', penagananCreateBlog)
+app.post('/register', penagananregister)
+app.post('/addlogin', addlogin)
 
 const myProject = []
 
@@ -193,7 +216,11 @@ async function add_my_project(req, res) {
             type: Sequelize.QueryTypes.SELECT
         });
 
-        res.render('add_my_project', { projects });
+        res.render('add_my_project', {
+            projects,
+            isLogin: req.session.isLogin,
+            user: req.session.user
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -226,7 +253,10 @@ function api(req, res) {
 }
 
 function home(req, res) {
-    res.render('index')
+    res.render('index', {
+        isLogin: req.session.isLogin,
+        user: req.session.user
+    })
 }
 
 
@@ -281,6 +311,126 @@ async function penagananCreateBlog(req, res) {
 
     // res.redirect('/add_my_project');
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function register(req, res) {
+    res.render('register')
+}
+
+
+
+async function penagananregister(req, res){
+    try {
+        const { name, email, password } = req.body
+        const salt = 10
+        
+        bcrypt.hash(password, salt, async (arr, hashPassword) => {
+            await SequelizePool.query(`INSERT INTO users (name, email, password, "createdAt", "updatedAt") VALUES ('${name}','${email}','${hashPassword}', NOW(), NOW())`)   
+        })
+        // await SequelizePool.query(`INSERT INTO users (name, email, password, "createdAt", "updatedAt") VALUES ('${name}','${email}','${password}'), NOW(), NOW())`)
+
+        res.redirect('/login')
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+function login(req, res) {
+    res.render('login')
+}
+
+async function addlogin(req, res) {
+    try {
+        const { email, password } = req.body;
+
+        const checkEmail = await SequelizePool.query(`SELECT * FROM users WHERE email = '${email}'`, { type: QueryTypes.SELECT });
+
+        if (checkEmail.length === 0) {
+            req.flash('failed', 'Email is not registered');
+            return res.redirect('/login');
+        }
+
+        bcrypt.compare(password, checkEmail[0].password, function(err, result) {
+            if (err) {
+                console.error('Password comparison error:', err);
+                req.flash('failed', 'gagal');
+                return res.redirect('/login');
+            }
+
+            if (!result) {
+                req.flash('failed', 'Incorrect password');
+                return res.redirect('/login');
+            }
+
+            // Passwords match
+            req.session.isLogin = true;
+            req.session.user = checkEmail[0].name;
+            return res.redirect('/');
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        req.flash('failed', 'Internal server error');
+        res.redirect('/login');
+    }
+}
+
+
+function logout(req, res) {
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session:', err);
+        } else {
+            res.redirect('/login'); // Redirect to the login page after logout
+        }
+    });
+}
+
+
+
+
+
+
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

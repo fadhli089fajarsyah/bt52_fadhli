@@ -522,6 +522,13 @@ body {
     margin-bottom: 20px;
     padding: 5px 0px;
 }
+.sdlogout{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-right: 30px;
+    align-items: center;
+}
 
 /* hover hover */
 .rating_btn:hover{

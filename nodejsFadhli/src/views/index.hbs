@@ -14,7 +14,7 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 
-<body  style="background-color: rgb(236, 233, 233);">
+<body style="background-color: rgb(236, 233, 233);">
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary position-fixed px-4">
         <div class="container-fluid">
@@ -43,6 +43,17 @@
                     </li>
                 </ul>
             </div>
+            {{#if isLogin}}
+            <div class="d-flex sdlogout">
+                <a class="fw-bold nav-link" >selamat datang {{user}} </a>
+                <a class="nav-link" href="/logout">|  logout</a>
+            </div>
+            {{else}}
+            <div class="sdlogout">
+                <a class="nav-link" href="/register">register</a>
+                <a class="nav-link" href="/login">| login</a>
+            </div>
+            {{/if}}
             <a href="/contact" type="button" class="btn btn-dark d-none d-lg-block">contact Me</a>
         </div>
     </nav>

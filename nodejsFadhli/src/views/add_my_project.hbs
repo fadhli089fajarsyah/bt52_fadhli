@@ -43,6 +43,17 @@
                     </li>
                 </ul>
             </div>
+            {{#if isLogin}}
+            <div class="d-flex sdlogout">
+                <a class="fw-bold nav-link" >selamat datang {{user}} </a>
+                <a class="nav-link" href="/">|  logout</a>
+            </div>
+            {{else}}
+            <div class="sdlogout">
+                <a class="nav-link" href="/register">register</a>
+                <a class="nav-link" href="/login">| login</a>
+            </div>
+            {{/if}}
             <a href="/contact" type="button" class="btn btn-dark d-none d-lg-block">contact Me</a>
         </div>
     </nav>
@@ -105,6 +116,7 @@
         </div> -->
 
         <div class="container mt-5">
+            {{#if isLogin}}
             <div class="form-group d-flex flex-column justify-content-center align-items-center">
                 <h1>ADD MY PROJECT</h1>
                 <form action="/createBlog" class="form_add" method="POST">
@@ -170,6 +182,7 @@
                     </div>
                 </form>
             </div>
+            {{/if}}
         </div>
 
 
@@ -191,8 +204,10 @@
                                 {{/each}}
                             </div>
                             <div class="flex warp_btn_edit_delete">
+                                {{#if this.isLogin}}
                                 <a href="/edit/{{this.id}}" class="btn_contact btn_edit_delete flex">edit</a>
                                 <a href="/delete/{{this.id}}" class="btn_contact btn_edit_delete flex">delete</a>
+                                {{/if}}
                             </div>
                         </div>
                     </a>

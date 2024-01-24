@@ -119,7 +119,7 @@
             {{#if isLogin}}
             <div class="form-group d-flex flex-column justify-content-center align-items-center">
                 <h1>ADD MY PROJECT</h1>
-                <form action="/createBlog" class="form_add" method="POST">
+                <form action="/createBlog" class="form_add" method="POST" enctype="multipart/form-data">
                     <!-- Project Name -->
                     <div class="form-group">
                         <label for="project_name">Project Name</label>
@@ -173,8 +173,8 @@
 
 
                     <div>
-                        <label for="upload_image" class="form-label">Upload Image</label>
-                        <input class="form-control form-control-lg" id="upload_image" type="file" name="upload_image">
+                        <label for="image" class="form-label">Upload Image</label>
+                        <input class="form-control form-control-lg" id="image" type="file" name="image">
                     </div>
                     <!-- Submit Button -->
                     <div class="form-group mt-4 d-flex justify-content-end align-items-end">
@@ -192,7 +192,7 @@
                 {{#each projects}}
                     <a href="/detail/{{this.id}}" class="link_to_detail_page">
                         <div class="card_my_project">
-                            <img src="/assets/img/dw.png" alt="" class="img_project flex">
+                            <img src="../uploads/{{this.image}}" alt="" class="img_project flex">
                             <a href="/detail/{{this.id}}" class="link lk_project">{{this.projectname}}</a>
                             <p class="tekx_card_project">{{this.tahun}} tahun {{this.resetbulan}} bulan {{this.resethari}} hari</p>
                             <div class="description_card_project">

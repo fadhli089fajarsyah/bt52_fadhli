@@ -4,6 +4,7 @@ const app = express()
 const port = 3000
 const session = require('express-session')
 const flash = require('express-flash')
+const upload = require('./src/middlewares/uploadFile')//img
 const bcrypt = require('bcrypt')
 
 //koneksi ke file file config buat ke database
@@ -33,6 +34,7 @@ app.set('view engine', 'hbs')
 app.set('views', 'src/views')
 
 app.use('/assets', express.static('src/assets'))
+app.use('/uploads', express.static('src/uploads'))
 app.use(express.urlencoded({ extended: false })) //body parse pengubbaah ke json (peng aktivenya)
 
 app.get('/', home)
@@ -49,7 +51,7 @@ app.get('/login', login)
 app.get('/logout', logout)
 
 app.post('/penangananEdit/:id', penangananEdit)
-app.post('/createBlog', penagananCreate)
+app.post('/createBlog',upload.single('image'), penagananCreate)
 app.post('/register', penagananregister)
 app.post('/addlogin', addlogin)
 
@@ -211,6 +213,7 @@ async function add_my_project(req, res) {
         const query = await SequelizePool.query("SELECT myprojects.*, users.name AS author_name FROM myprojects LEFT JOIN users ON myprojects.author = users.id", {
             type: Sequelize.QueryTypes.SELECT
         })
+        console.log(query);
         const projects = query.map(res => ({
             ...res,
             isLogin: req.session.isLogin
@@ -276,10 +279,11 @@ async function penagananCreate(req, res) {
         const duration = calculateDuration(star_date, end_date)
         const logos = checkedTechnologies
         const author = req.session.idUser
-        console.log(author)
+        const image = req.file.filename
+
         const query = `
-        INSERT INTO myprojects(projectname, description, star_date, end_date, resethari, resetbulan, tahun, logos,author, "createdAt", "updatedAt") 
-        VALUES (:project_name, :description, :star_date, :end_date, :resethari, :resetbulan, :tahun, ARRAY[:logos],:author, NOW(), NOW())`
+        INSERT INTO myprojects(projectname, description, star_date, end_date, resethari, resetbulan, tahun, logos, image, author, "createdAt", "updatedAt") 
+        VALUES (:project_name, :description, :star_date, :end_date, :resethari, :resetbulan, :tahun, ARRAY[:logos], :image, :author, NOW(), NOW())`
 
         await myprojects.sequelize.query(query, {
             replacements: {
@@ -292,6 +296,7 @@ async function penagananCreate(req, res) {
                 tahun: duration.tahun,
                 logos,
                 author,
+                image,
             },
             type: Sequelize.QueryTypes.INSERT,
         })

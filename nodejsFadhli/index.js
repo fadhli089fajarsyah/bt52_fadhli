@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt')
 const { development } = require('./src/config/config.json')
 const { Sequelize, QueryTypes } = require('sequelize')
 const SequelizePool = new Sequelize(development)
-let models = require("./src/models");
+let models = require("./src/models")
 let myprojects = models.myprojects
 
 
@@ -46,10 +46,10 @@ app.get('/edit/:id', edit)
 app.get('/delete/:id', penangananDelete)
 app.get('/register', register)
 app.get('/login', login)
-app.get('/logout', logout);
+app.get('/logout', logout)
 
 app.post('/penangananEdit/:id', penangananEdit)
-app.post('/createBlog', penagananCreateBlog)
+app.post('/createBlog', penagananCreate)
 app.post('/register', penagananregister)
 app.post('/addlogin', addlogin)
 
@@ -59,24 +59,24 @@ const myProject = []
 // durasi
 function calculateDuration(star_date, end_date) {
     // Mengubah string tanggal input menjadi objek Date
-    const startDateObject = new Date(star_date);
-    const endDateObject = new Date(end_date);
+    const startDateObject = new Date(star_date)
+    const endDateObject = new Date(end_date)
 
-    const selisihWaktu = endDateObject - startDateObject;
+    const selisihWaktu = endDateObject - startDateObject
 
-    const milidetik = 24 * 60 * 60 * 1000;
-    const hari = Math.floor(selisihWaktu / milidetik);
-    const bulan = Math.floor(hari / 30);
-    const tahun = Math.floor(bulan / 12);
+    const milidetik = 24 * 60 * 60 * 1000
+    const hari = Math.floor(selisihWaktu / milidetik)
+    const bulan = Math.floor(hari / 30)
+    const tahun = Math.floor(bulan / 12)
 
-    const resethari = hari % 30;
-    const resetbulan = bulan % 12;
+    const resethari = hari % 30
+    const resetbulan = bulan % 12
 
     return {
         resethari,
         resetbulan,
         tahun
-    };
+    }
 }
 
 //ambil data dari database buat edit
@@ -88,11 +88,11 @@ async function getSingleDataFromDatabase(id) {
                 replacements: { id },
                 type: Sequelize.QueryTypes.SELECT,
             }
-        );
-        return project[0]; // Mengambil data pertama dari hasil query
+        )
+        return project[0] // Mengambil data pertama dari hasil query
     } catch (error) {
-        console.error(error);
-        throw error;
+        console.error(error)
+        throw error
     }
 }
 
@@ -101,11 +101,11 @@ async function getSingleDataFromDatabase(id) {
 
 async function penangananEdit(req, res) {
     try {
-        const { id } = req.params;
-        const { project_name, description, star_date, end_date, checkedTechnologies } = req.body;
-        const duration = calculateDuration(star_date, end_date);
-        const logos = checkedTechnologies;
-    
+        const { id } = req.params
+        const { project_name, description, star_date, end_date, checkedTechnologies } = req.body
+        const duration = calculateDuration(star_date, end_date)
+        const logos = checkedTechnologies
+
         await SequelizePool.query(
             `
             UPDATE myprojects SET 
@@ -133,23 +133,19 @@ async function penangananEdit(req, res) {
                 },
                 type: Sequelize.QueryTypes.UPDATE,
             }
-        );
-    
-        res.redirect('/add_my_project');
+        )
+
+        res.redirect('/add_my_project')
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Gagal mengupdate data",
-            error: error.message,
-        });
+        console.log(error);
     }
-    
 
-    // const { id } = req.params;
-    // const { project_name, description, star_date, end_date, checkedTechnologies } = req.body;
 
-    // const indexint = parseInt(id); //ubah dulu dari string ke int karna splice pertamanya harus int tidk boleh string
-    // const duration = calculateDuration(star_date, end_date);
+    // const { id } = req.params
+    // const { project_name, description, star_date, end_date, checkedTechnologies } = req.body
+
+    // const indexint = parseInt(id) //ubah dulu dari string ke int karna splice pertamanya harus int tidk boleh string
+    // const duration = calculateDuration(star_date, end_date)
     // const logos = checkedTechnologies
 
     // myProject.splice(indexint, 1, {
@@ -159,27 +155,27 @@ async function penangananEdit(req, res) {
     //     star_date,
     //     end_date,
     //     duration
-    // });
+    // })
     // const abc = myProject
 
 
-    // res.redirect('/add_my_project');
+    // res.redirect('/add_my_project')
 }
 
 
 async function edit(req, res) {
     try {
-        const { id } = req.params;
-        const dataEdit = await getSingleDataFromDatabase(id);
-        console.log(dataEdit);
+        const { id } = req.params
+        const dataEdit = await getSingleDataFromDatabase(id)
+        console.log(dataEdit)
 
-        res.render('edit', { dataEdit, index: id, });
+        res.render('edit', { dataEdit, index: id, })
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
+        console.error(error)
+        
     }
 
-    // const { id } = req.params;
+    // const { id } = req.params
     // const dataEdit = myProject[id]
     // console.log(dataEdit)
 
@@ -198,7 +194,7 @@ async function penangananDelete(req, res) {
 
         res.redirect('/add_my_project')
     } catch (error) {
-        throw error
+        console.error(error)
     }
     // const { id } = req.params
     // myProject.splice(id, 1)
@@ -212,28 +208,39 @@ async function penangananDelete(req, res) {
 
 async function add_my_project(req, res) {
     try {
-        const projects = await SequelizePool.query("SELECT * FROM myprojects", {
+        const query = await SequelizePool.query("SELECT * FROM myprojects", {
             type: Sequelize.QueryTypes.SELECT
-        });
-
+        })
+        const projects = query.map(res => ({
+            ...res,
+            isLogin: req.session.isLogin
+        }))
         res.render('add_my_project', {
             projects,
             isLogin: req.session.isLogin,
             user: req.session.user
-        });
+        })
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
+        console.error(error)
     }
     // res.render('add_my_project', { myProject })
 }
-function detail(req, res) {
-    const { id } = req.params
+async function detail(req, res) {
+    try {
+        const { id } = req.params
+        const dataEdit = await getSingleDataFromDatabase(id)
+        console.log()
 
-    const dataDetail = myProject[id]
+        res.render('detail', { dataEdit, index: id, })
+    } catch (error) {
+        console.error(error)
+    }
+    // const { id } = req.params
+
+    // const dataDetail = myProject[id]
 
 
-    res.render('detail', { myProject: dataDetail })
+    // res.render('detail', { myProject: dataDetail })
 }
 
 function oop(req, res) {
@@ -262,16 +269,16 @@ function home(req, res) {
 
 
 
-async function penagananCreateBlog(req, res) {
+async function penagananCreate(req, res) {
     try {
-        const { project_name, description, star_date, end_date, checkedTechnologies } = req.body;
-        const duration = calculateDuration(star_date, end_date);
+        const { project_name, description, star_date, end_date, checkedTechnologies } = req.body
+        const duration = calculateDuration(star_date, end_date)
         const logos = checkedTechnologies
-        console.log(logos);
+        console.log(logos)
         const query = `
     INSERT INTO myprojects(projectname, description, star_date, end_date, resethari, resetbulan, tahun, logos, "createdAt", "updatedAt") 
     VALUES (:project_name, :description, :star_date, :end_date, :resethari, :resetbulan, :tahun, ARRAY[:logos], NOW(), NOW())
-`;
+`
 
         await myprojects.sequelize.query(query, {
             replacements: {
@@ -285,18 +292,17 @@ async function penagananCreateBlog(req, res) {
                 logos,
             },
             type: Sequelize.QueryTypes.INSERT,
-        });
+        })
 
-        res.redirect('/add_my_project');
+        res.redirect('/add_my_project')
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
+        console.error(error)
     }
     // const { project_name, description, checkedTechnologies, star_date, end_date, } = req.body
 
     // const logos = checkedTechnologies
 
-    // const duration = calculateDuration(star_date, end_date);
+    // const duration = calculateDuration(star_date, end_date)
 
 
     // myProject.push({
@@ -306,48 +312,11 @@ async function penagananCreateBlog(req, res) {
     //     duration,
     //     star_date,
     //     end_date
-    // });
+    // })
 
 
-    // res.redirect('/add_my_project');
+    // res.redirect('/add_my_project')
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function register(req, res) {
@@ -356,19 +325,19 @@ function register(req, res) {
 
 
 
-async function penagananregister(req, res){
+async function penagananregister(req, res) {
     try {
         const { name, email, password } = req.body
         const salt = 10
-        
+
         bcrypt.hash(password, salt, async (arr, hashPassword) => {
-            await SequelizePool.query(`INSERT INTO users (name, email, password, "createdAt", "updatedAt") VALUES ('${name}','${email}','${hashPassword}', NOW(), NOW())`)   
+            await SequelizePool.query(`INSERT INTO users (name, email, password, "createdAt", "updatedAt") VALUES ('${name}','${email}','${hashPassword}', NOW(), NOW())`)
         })
         // await SequelizePool.query(`INSERT INTO users (name, email, password, "createdAt", "updatedAt") VALUES ('${name}','${email}','${password}'), NOW(), NOW())`)
 
         res.redirect('/login')
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 }
 
@@ -381,36 +350,36 @@ function login(req, res) {
 
 async function addlogin(req, res) {
     try {
-        const { email, password } = req.body;
+        const { email, password } = req.body
 
-        const checkEmail = await SequelizePool.query(`SELECT * FROM users WHERE email = '${email}'`, { type: QueryTypes.SELECT });
+        const checkEmail = await SequelizePool.query(`SELECT * FROM users WHERE email = '${email}'`, { type: QueryTypes.SELECT })
 
         if (checkEmail.length === 0) {
-            req.flash('failed', 'Email is not registered');
-            return res.redirect('/login');
+            req.flash('failed', 'Email is not registered')
+            return res.redirect('/login')
         }
 
-        bcrypt.compare(password, checkEmail[0].password, function(err, result) {
+        bcrypt.compare(password, checkEmail[0].password, function (err, result) {
             if (err) {
-                console.error('Password comparison error:', err);
-                req.flash('failed', 'gagal');
-                return res.redirect('/login');
+                console.error('Password comparison error:', err)
+                req.flash('failed', 'gagal')
+                return res.redirect('/login')
             }
 
             if (!result) {
-                req.flash('failed', 'Incorrect password');
-                return res.redirect('/login');
+                req.flash('failed', 'Incorrect password')
+                return res.redirect('/login')
             }
 
             // Passwords match
-            req.session.isLogin = true;
-            req.session.user = checkEmail[0].name;
-            return res.redirect('/');
-        });
+            req.session.isLogin = true
+            req.session.user = checkEmail[0].name
+            return res.redirect('/')
+        })
     } catch (error) {
-        console.error('Login error:', error);
-        req.flash('failed', 'Internal server error');
-        res.redirect('/login');
+        console.error('Login error:', error)
+        req.flash('failed', 'Internal server error')
+        res.redirect('/login')
     }
 }
 
@@ -418,17 +387,12 @@ async function addlogin(req, res) {
 function logout(req, res) {
     req.session.destroy(err => {
         if (err) {
-            console.error('Error destroying session:', err);
+            console.error('Error destroying session:', err)
         } else {
-            res.redirect('/login'); // Redirect to the login page after logout
+            res.redirect('/login') // Redirect to the login page after logout
         }
-    });
+    })
 }
-
-
-
-
-
 
 
 

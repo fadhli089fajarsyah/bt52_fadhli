@@ -32,6 +32,15 @@ module.exports = {
       },
       logos: {
         type: Sequelize.ARRAY(Sequelize.TEXT)  // 
+      }, 
+      author: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

@@ -19,11 +19,6 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary position-fixed px-4">
         <div class="container-fluid">
             <img src="/assets/img/dw.png" alt="" srcset="" class="logo_nav">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -46,7 +41,7 @@
             {{#if isLogin}}
             <div class="d-flex sdlogout">
                 <a class="fw-bold nav-link" >selamat datang {{user}} </a>
-                <a class="nav-link" href="/">|  logout</a>
+                <a class="nav-link" href="/logout">|  logout</a>
             </div>
             {{else}}
             <div class="sdlogout">
@@ -55,8 +50,13 @@
             </div>
             {{/if}}
             <a href="/contact" type="button" class="btn btn-dark d-none d-lg-block">contact Me</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
-    </nav>
+    </nav>  
 
 
     <div class="container_add_my_project">

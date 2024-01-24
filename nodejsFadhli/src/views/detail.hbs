@@ -48,7 +48,7 @@
 
     <div class="container_add_my_project">
         <div class="warp_detail">
-            <h1>{{myProject.project_name}}</h1>
+            <h1>{{dataEdit.project_name}}</h1>
             <div class="top_detail flex">
                 <img src="/assets/img/dw.png" alt="" srcset="" class="img_detail flex">
                 <div class="right_detail flex">
@@ -71,24 +71,25 @@
                                         transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
                                 </g>
                             </svg>
-                            <p>{{myProject.star_date}} - {{myProject.end_date}}</p>
+                            <p tk_deatil>{{dataEdit.star_date}} - {{dataEdit.end_date}}</p>
                         </div>
                         <div class="duration flex">
                             <img width="25px" src="/assets/img/icons8-time.gif" alt="">
-                            <p>{{myProject.duration.tahun}} tahun - {{myProject.duration.resetbulan}} bulan -
-                                {{myProject.duration.resethari}} hari </p>
+                            <p class="tk_deatil">{{dataEdit.tahun}} tahun - {{dataEdit.resetbulan}} bulan -
+                                {{dataEdit.resethari}} hari </p>
                         </div>
                     </div>
+                    
                     <div class="detai_teknologi">
                         <h4 class="title_right_detail">Tecnologies</h4>
-                        {{#each myProject.logos}}
-                        <img src="/assets/img/{{this.logo}}" alt="" class="logo" width="25px" height="30px">
+                        {{#each dataEdit.logos}}
+                        <img src="../assets/img/{{this}}" alt="" class="logo" width="25px" height="30px">
                         {{/each}}
                     </div>
                 </div>
             </div>
             <p class="deskription_detail">
-                {{myProject.description}}
+                {{dataEdit.description}}
             </p>
         </div>
     </div>

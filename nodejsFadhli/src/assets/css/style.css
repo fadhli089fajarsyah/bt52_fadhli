@@ -101,6 +101,7 @@ body {
     justify-content: center;
     align-items: center;
     justify-items: center;
+    
 }
 
 .card_full {
@@ -461,12 +462,13 @@ body {
     display: flex;
     margin-top: 150px;
     font-size: 10px;
+    flex-wrap: wrap;
 }
 
 .warp__card_oop {
     border: #d4d4d4 2px solid;
     background-color: white;
-    width: 20%;
+    width: 400px;
     padding: 20px;
     margin: 10px 0px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -481,6 +483,7 @@ body {
     width: 100%;
     position: cover;
     height: 200px;
+    margin-bottom: 10px;
 }
 
 .name_oop {
@@ -593,7 +596,6 @@ body {
 }
 
 
-
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (max-width: 768px) {
     body {
@@ -642,8 +644,19 @@ body {
         height: 200px;
     }
 
+    .tk_deatil{
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        justify-items: center;
+        margin-left: 10px;
+        
+    }
     .duration {
         gap: 10px;
+        text-align: center;
+        align-items: center;
     }
 
     .right_detail {
@@ -665,6 +678,9 @@ body {
 
 
 @media only screen and (max-width: 576px) {
+    .sdlogout{
+        font-size:10px;
+    }
     .card_full {
         flex-wrap: wrap;
         align-items: center;

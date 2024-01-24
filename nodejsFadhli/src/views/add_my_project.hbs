@@ -203,6 +203,7 @@
                                 <img src="/assets/img/{{this}}" alt="" class="logo" width="25px" height="30px" >
                                 {{/each}}
                             </div>
+                            <p>di upload oleh : {{this.author_name}}</p>
                             <div class="flex warp_btn_edit_delete">
                                 {{#if this.isLogin}}
                                 <a href="/edit/{{this.id}}" class="btn_contact btn_edit_delete flex">edit</a>

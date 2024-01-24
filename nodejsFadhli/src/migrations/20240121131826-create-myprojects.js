@@ -33,6 +33,9 @@ module.exports = {
       logos: {
         type: Sequelize.ARRAY(Sequelize.TEXT)  // 
       }, 
+      image: {
+        type: Sequelize.STRING
+      },
       author: {
         type: Sequelize.INTEGER,
         references: {

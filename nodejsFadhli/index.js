@@ -208,7 +208,7 @@ async function penangananDelete(req, res) {
 
 async function add_my_project(req, res) {
     try {
-        const query = await SequelizePool.query("SELECT * FROM myprojects", {
+        const query = await SequelizePool.query("SELECT myprojects.*, users.name AS author_name FROM myprojects LEFT JOIN users ON myprojects.author = users.id", {
             type: Sequelize.QueryTypes.SELECT
         })
         const projects = query.map(res => ({
@@ -218,7 +218,7 @@ async function add_my_project(req, res) {
         res.render('add_my_project', {
             projects,
             isLogin: req.session.isLogin,
-            user: req.session.user
+            user: req.session.user,
         })
     } catch (error) {
         console.error(error)
@@ -263,6 +263,7 @@ function home(req, res) {
     res.render('index', {
         isLogin: req.session.isLogin,
         user: req.session.user
+        
     })
 }
 
@@ -274,11 +275,11 @@ async function penagananCreate(req, res) {
         const { project_name, description, star_date, end_date, checkedTechnologies } = req.body
         const duration = calculateDuration(star_date, end_date)
         const logos = checkedTechnologies
-        console.log(logos)
+        const author = req.session.idUser
+        console.log(author)
         const query = `
-    INSERT INTO myprojects(projectname, description, star_date, end_date, resethari, resetbulan, tahun, logos, "createdAt", "updatedAt") 
-    VALUES (:project_name, :description, :star_date, :end_date, :resethari, :resetbulan, :tahun, ARRAY[:logos], NOW(), NOW())
-`
+        INSERT INTO myprojects(projectname, description, star_date, end_date, resethari, resetbulan, tahun, logos,author, "createdAt", "updatedAt") 
+        VALUES (:project_name, :description, :star_date, :end_date, :resethari, :resetbulan, :tahun, ARRAY[:logos],:author, NOW(), NOW())`
 
         await myprojects.sequelize.query(query, {
             replacements: {
@@ -290,6 +291,7 @@ async function penagananCreate(req, res) {
                 resetbulan: duration.resetbulan,
                 tahun: duration.tahun,
                 logos,
+                author,
             },
             type: Sequelize.QueryTypes.INSERT,
         })
@@ -374,6 +376,8 @@ async function addlogin(req, res) {
             // Passwords match
             req.session.isLogin = true
             req.session.user = checkEmail[0].name
+            req.session.idUser = checkEmail[0].id
+            
             return res.redirect('/')
         })
     } catch (error) {

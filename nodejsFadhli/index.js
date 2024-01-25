@@ -1,5 +1,5 @@
 const express = require('express')
-const exphbs = require('express-handlebars') // untuk membuat instance dari Express Handlebars (exphbs) dengan konfigurasi tertentu. exphbs.create adalah metode yang disediakan oleh modul Express Handlebars 
+const exphbs = require('express-handlebars') // untuk membuat instance dari Express Handlebars (exphbs) dengan konfigurasi tertentu. 
 const app = express()
 const port = 3000
 const session = require('express-session')
@@ -52,6 +52,7 @@ app.get('/login', login)
 app.get('/logout', logout)
 app.get('/sukseshapus', sukseshapus)
 app.get('/suksestambah', suksestambah)
+app.get('/berasildiedit', berasildiedit)
 app.get('/berasildiedit', berasildiedit)
 
 app.post('/penangananEdit/:id', penangananEdit)
@@ -397,7 +398,7 @@ function logout(req, res) {
         if (err) {
             console.error('Error destroying session:', err)
         } else {
-            res.redirect('/login') // Redirect to the login page after logout
+            res.redirect('/login') 
         }
     })
 }

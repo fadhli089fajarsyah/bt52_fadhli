@@ -3,7 +3,7 @@ const exphbs = require('express-handlebars') // untuk membuat instance dari Expr
 const app = express()
 const port = 3000
 const session = require('express-session')
-const flash = require('express-flash')
+const flash = require('express-flash') //buat pop up gagal login
 const upload = require('./src/middlewares/uploadFile')//img
 const bcrypt = require('bcrypt')
 
@@ -18,18 +18,19 @@ let myprojects = models.myprojects
 // middleware sessionnya
 app.use(session({
     cookie: {
-        httpOnly: true,
-        secure: false,
-        maxAge: 2 * 60 * 60 * 1000
+        httpOnly: true,   //httpOnly: Cookie hanya dapat diakses oleh server, tidak dapat diakses oleh JavaScript di sisi klien
+        secure: false,   //secure: Jika true, cookie hanya akan dikirim melalui koneksi HTTPS.
+        maxAge: 2 * 60 * 60 * 1000  //maxAge: Waktu kedaluwarsa cookie dalam milidetik. Dalam contoh ini, cookie akan kedaluwarsa setelah 2 jam.
     },
-    resave: false,
-    store: session.MemoryStore(),
-    secret: 'session_storage',
-    saveUninitialized: true
+    resave: false,  //resave: Ini adalah opsi yang menunjukkan apakah sesi harus disimpan ulang ke penyimpanan meskipun tidak ada perubahan. Biasanya diatur ke false.
+    store: session.MemoryStore(), //digunakan, yang menyimpan sesi di memori.
+    secret: 'session_storage', //kata kunci rahasia yang digunakan untuk mengamankan cookie sesi.
+    saveUninitialized: true //
 }))
 
 //flash midelwarenya
-app.use(flash())
+app.use(flash()) //buat memanggil fungsi flash yang gagal login kayak alert
+//buat manggil hbs
 app.set('view engine', 'hbs')
 app.set('views', 'src/views')
 
@@ -49,6 +50,9 @@ app.get('/delete/:id', penangananDelete)
 app.get('/register', register)
 app.get('/login', login)
 app.get('/logout', logout)
+app.get('/sukseshapus', sukseshapus)
+app.get('/suksestambah', suksestambah)
+app.get('/berasildiedit', berasildiedit)
 
 app.post('/penangananEdit/:id', penangananEdit)
 app.post('/createBlog',upload.single('image'), penagananCreate)
@@ -98,9 +102,15 @@ async function getSingleDataFromDatabase(id) {
     }
 }
 
-
-
-
+function sukseshapus(req, res) {
+    res.render('sukseshapus')
+}
+function suksestambah(req, res) {
+    res.render('suksestambah')
+}
+function berasildiedit(req, res) {
+    res.render('berasildiedit')
+}
 async function penangananEdit(req, res) {
     try {
         const { id } = req.params
@@ -137,7 +147,7 @@ async function penangananEdit(req, res) {
             }
         )
 
-        res.redirect('/add_my_project')
+        res.redirect('/berasildiedit')
     } catch (error) {
         console.log(error);
     }
@@ -164,7 +174,6 @@ async function penangananEdit(req, res) {
     // res.redirect('/add_my_project')
 }
 
-
 async function edit(req, res) {
     try {
         const { id } = req.params
@@ -185,16 +194,12 @@ async function edit(req, res) {
 
 }
 
-
-
-
-
 async function penangananDelete(req, res) {
     try {
         const { id } = req.params
         await SequelizePool.query(`DELETE FROM myprojects WHERE id = ${id}`)
 
-        res.redirect('/add_my_project')
+        res.redirect('/sukseshapus')
     } catch (error) {
         console.error(error)
     }
@@ -203,10 +208,6 @@ async function penangananDelete(req, res) {
 
     // res.redirect('/add_my_project')
 }
-
-
-
-
 
 async function add_my_project(req, res) {
     try {
@@ -270,10 +271,8 @@ function home(req, res) {
     })
 }
 
-
-
-
 async function penagananCreate(req, res) {
+    // try and catch itu  
     try {
         const { project_name, description, star_date, end_date, checkedTechnologies } = req.body
         const duration = calculateDuration(star_date, end_date)
@@ -301,7 +300,7 @@ async function penagananCreate(req, res) {
             type: Sequelize.QueryTypes.INSERT,
         })
 
-        res.redirect('/add_my_project')
+        res.redirect('/suksestambah')
     } catch (error) {
         console.error(error)
     }

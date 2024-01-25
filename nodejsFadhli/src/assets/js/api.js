@@ -1,4 +1,5 @@
 function getDataApi() {
+    //romise mewakili nilai yang mungkin belum tersedia saat ini, tetapi akan tersedia di masa depan, atau mungkin tidak tersedia sama sekali.
     return new Promise((resolve, reject) => {   // resolve ditepati atau berasil kalo reject ingkari
         const xhr = new XMLHttpRequest();
         xhr.open("GET", "https://api.npoint.io/01d2222930913b924270", true);

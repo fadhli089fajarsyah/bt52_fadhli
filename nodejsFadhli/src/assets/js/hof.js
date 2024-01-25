@@ -91,3 +91,6 @@ function filter_rating(rating) {
 
 
 allCardRating();//eksekusi funtion 
+
+
+//callback itu buat masukan data  dari bawah ke funtion yang uda di buat
